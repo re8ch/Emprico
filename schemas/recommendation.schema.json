@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "id", "decision_time", "context", "recommendation", "outcome", "provenance"],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "decision_time": {"type": "string", "format": "date-time"},
+    "context": {
+      "type": "object",
+      "required": ["objective", "facts", "constraints"],
+      "properties": {
+        "objective": {"type": "string", "minLength": 1},
+        "facts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["claim", "evidence"],
+            "properties": {
+              "claim": {"type": "string", "minLength": 1},
+              "evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "format": "uri"}}
+            },
+            "additionalProperties": false
+          }
+        },
+        "constraints": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "recommendation": {
+      "type": "object",
+      "required": ["action", "rationale", "confidence", "alternatives"],
+      "properties": {
+        "action": {"type": "string", "minLength": 1},
+        "rationale": {"type": "string", "minLength": 1},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "alternatives": {"type": "array", "items": {"type": "string"}},
+        "abstain_when": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "outcome": {
+      "type": "object",
+      "required": ["status", "evidence"],
+      "properties": {
+        "status": {"enum": ["unknown", "supported", "mixed", "contradicted"]},
+        "evidence": {"type": "array", "items": {"type": "string", "format": "uri"}}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["case_ids", "reviewed_by", "license"],
+      "properties": {
+        "case_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "reviewed_by": {"type": "string"},
+        "license": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
