@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "record_id", "source", "pull_request", "license", "provenance"],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "record_id": {"type": "string", "pattern": "^github:[^/]+/[^#]+#pr-[0-9]+$"},
+    "source": {
+      "type": "object",
+      "required": ["provider", "repository", "visibility", "url"],
+      "properties": {
+        "provider": {"const": "github"},
+        "repository": {"type": "string"},
+        "visibility": {"enum": ["PUBLIC", "PRIVATE", "INTERNAL"]},
+        "url": {"type": "string", "format": "uri"}
+      },
+      "additionalProperties": false
+    },
+    "pull_request": {
+      "type": "object",
+      "required": ["number", "title", "state", "created_at", "changed_files", "additions", "deletions", "closing_issues"],
+      "properties": {
+        "number": {"type": "integer", "minimum": 1},
+        "title": {"type": "string"},
+        "state": {"enum": ["OPEN", "CLOSED", "MERGED"]},
+        "created_at": {"type": "string", "format": "date-time"},
+        "updated_at": {"type": "string", "format": "date-time"},
+        "merged_at": {"type": ["string", "null"], "format": "date-time"},
+        "changed_files": {"type": "integer", "minimum": 0},
+        "additions": {"type": "integer", "minimum": 0},
+        "deletions": {"type": "integer", "minimum": 0},
+        "closing_issues": {"type": "array", "items": {"type": "string", "format": "uri"}},
+        "labels": {"type": "array", "items": {"type": "string"}},
+        "review_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "license": {
+      "type": "object",
+      "required": ["spdx", "training_eligible", "review_status"],
+      "properties": {
+        "spdx": {"type": ["string", "null"]},
+        "training_eligible": {"type": "boolean"},
+        "review_status": {"enum": ["pending", "approved", "rejected"]}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["collected_at", "collector", "source_api"],
+      "properties": {
+        "collected_at": {"type": "string", "format": "date-time"},
+        "collector": {"type": "string"},
+        "source_api": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
