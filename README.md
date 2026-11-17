@@ -17,6 +17,8 @@ The reusable workflows implement this loop without deployment or runtime authori
 
 [`evidence/re8ch-2026-11-17.json`](evidence/re8ch-2026-11-17.json) is the first aggregate inventory. [`cases/`](cases/) contains the decisions already supported by repository history.
 
+The private dataset is stored at [`RE8CH/Emprico`](https://huggingface.co/datasets/RE8CH/Emprico). GitHub records reviewed publication revisions and file digests in [`datasets/huggingface.json`](datasets/huggingface.json); the first immutable revision is [`6db64370`](https://huggingface.co/datasets/RE8CH/Emprico/tree/6db64370e0658e7bcc254f3dd41bc673b47030a8).
+
 Collect a public repository slice with:
 
 ```bash

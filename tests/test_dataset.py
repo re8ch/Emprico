@@ -40,3 +40,12 @@ class DatasetTest(unittest.TestCase):
             records.extend(load_jsonl(path))
         ids = [record.get("id", record.get("record_id")) for record in records]
         self.assertEqual(len(ids), len(set(ids)))
+
+    def test_huggingface_publications_are_immutable(self):
+        manifest = json.loads((ROOT / "datasets" / "huggingface.json").read_text())
+        self.assertEqual(manifest["visibility"], "private")
+        for publication in manifest["publications"]:
+            self.assertRegex(publication["revision"], r"^[0-9a-f]{40}$")
+            self.assertIn(publication["revision"], publication["revisionUrl"])
+            for item in publication["files"]:
+                self.assertRegex(item["sha256"], r"^[0-9a-f]{64}$")

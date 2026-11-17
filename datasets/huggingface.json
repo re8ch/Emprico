@@ -1,0 +1,27 @@
+{
+  "$schema": "../schemas/dataset-publication.schema.json",
+  "authority": {
+    "data": "https://huggingface.co/datasets/RE8CH/Emprico",
+    "governance": "https://github.com/re8ch/Emprico"
+  },
+  "visibility": "private",
+  "publications": [
+    {
+      "name": "public-gitops-v0.1",
+      "publishedAt": "2026-11-17T14:20:00Z",
+      "revision": "6db64370e0658e7bcc254f3dd41bc673b47030a8",
+      "revisionUrl": "https://huggingface.co/datasets/RE8CH/Emprico/tree/6db64370e0658e7bcc254f3dd41bc673b47030a8",
+      "sourcePullRequest": "https://github.com/re8ch/Emprico/pull/7",
+      "files": [
+        {
+          "path": "README.md",
+          "sha256": "7a732f53b5340f89a1ddc447c885c0bab4dfc68136740dde98bceeaddb252ae3"
+        },
+        {
+          "path": "data/public-gitops-v0.1.jsonl",
+          "sha256": "654beb7dede740e8661c500ce4f2a651acd77a7df0db974a128d98cfe04ce885"
+        }
+      ]
+    }
+  ]
+}
