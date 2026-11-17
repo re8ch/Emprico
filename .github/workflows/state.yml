@@ -1,0 +1,62 @@
+name: State
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  transition:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply evidence-backed status
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
+        with:
+          script: |
+            const colors = {
+              'status:in-progress': '1d76db',
+              'status:verifying': 'fbca04',
+              'status:done': '0e8a16'
+            }
+            const ensure = async name => {
+              try {
+                await github.rest.issues.getLabel({...context.repo, name})
+              } catch (error) {
+                if (error.status !== 404) throw error
+                await github.rest.issues.createLabel({...context.repo, name, color: colors[name], description: 'Emprico evidence-backed state'})
+              }
+            }
+            const apply = async (number, next) => {
+              for (const label of Object.keys(colors)) {
+                try { await github.rest.issues.removeLabel({...context.repo, issue_number: number, name: label}) }
+                catch (error) { if (error.status !== 404) throw error }
+              }
+              await ensure(next)
+              await github.rest.issues.addLabels({...context.repo, issue_number: number, labels: [next]})
+            }
+
+            if (context.eventName === 'issues') {
+              const next = context.payload.action === 'closed' ? 'status:done' :
+                context.payload.action === 'reopened' ? 'status:in-progress' : null
+              if (next) await apply(context.payload.issue.number, next)
+              return
+            }
+
+            const pr = context.payload.pull_request
+            if (!pr) return
+            const closing = /(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+(?:(?<owner>[A-Za-z0-9_.-]+)\/(?<repo>[A-Za-z0-9_.-]+))?#(?<number>\d+)/gi
+            const refs = [...(pr.body || '').matchAll(closing)].map(match => ({
+              owner: match.groups.owner || context.repo.owner,
+              repo: match.groups.repo || context.repo.repo,
+              number: Number(match.groups.number)
+            }))
+            const next = context.payload.action === 'closed' && pr.merged ? 'status:verifying' :
+              ['opened', 'edited', 'reopened', 'synchronize', 'ready_for_review'].includes(context.payload.action) ? 'status:in-progress' : null
+            if (!next) return
+            for (const ref of refs) {
+              if (ref.owner === context.repo.owner && ref.repo === context.repo.repo) await apply(ref.number, next)
+              else core.notice(`Cross-repository transition requires installation authority: ${ref.owner}/${ref.repo}#${ref.number} -> ${next}`)
+            }

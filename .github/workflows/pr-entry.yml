@@ -1,0 +1,46 @@
+name: PR entry
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify linked Issue context
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
+        with:
+          script: |
+            const pr = context.payload.pull_request
+            if (!pr) core.setFailed('PR entry requires a pull_request event')
+
+            const text = pr.body || ''
+            const closing = /(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+(?:(?<owner>[A-Za-z0-9_.-]+)\/(?<repo>[A-Za-z0-9_.-]+))?#(?<number>\d+)/gi
+            const refs = [...text.matchAll(closing)].map(match => ({
+              owner: match.groups.owner || context.repo.owner,
+              repo: match.groups.repo || context.repo.repo,
+              number: Number(match.groups.number)
+            }))
+            const unique = [...new Map(refs.map(ref => [`${ref.owner}/${ref.repo}#${ref.number}`, ref])).values()]
+            if (!unique.length) {
+              core.setFailed('Add a closing reference such as `Closes #123` or `Closes owner/repository#123`.')
+              return
+            }
+
+            for (const ref of unique) {
+              const query = `query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){issue(number:$number){url state projectItems(first:1){totalCount}}}}`
+              const data = await github.graphql(query, ref)
+              const issue = data.repository?.issue
+              if (!issue) {
+                core.setFailed(`Referenced Issue does not exist or is not visible: ${ref.owner}/${ref.repo}#${ref.number}`)
+                continue
+              }
+              const projects = issue.projectItems?.totalCount ?? 0
+              core.info(`${issue.url} state=${issue.state} projects=${projects}`)
+              if (projects === 0) core.warning(`${issue.url} has no visible native Project membership`)
+            }

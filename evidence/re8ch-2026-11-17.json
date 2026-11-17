@@ -1,0 +1,10 @@
+{
+  "observedAt": "2026-11-17",
+  "organization": "re8ch",
+  "activeRepositories": 28,
+  "issuesEnabledRepositories": 25,
+  "workflowRepositories": 17,
+  "pullRequestTemplateRepositories": 2,
+  "issueTemplateRepositories": 2,
+  "judgment": "Adopt a small reusable entrance and status loop before expanding repository-specific templates."
+}

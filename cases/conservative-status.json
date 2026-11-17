@@ -1,0 +1,14 @@
+{
+  "id": "conservative-status",
+  "facts": [
+    "A merged pull request proves source integration but does not prove runtime health.",
+    "Pages publication and runtime reconciliation have different trigger scopes.",
+    "Issue closure is a stronger completion signal than pull request merge alone."
+  ],
+  "judgment": "Status automation should encode facts and preserve uncertainty between merge and verified completion.",
+  "rule": "Move linked work to in-progress when implementation starts, verifying when merged, and done when the Issue closes.",
+  "evidence": [
+    "https://github.com/re8ch/service-backend/issues/2891",
+    "https://github.com/re8ch/delivery-products-gitops/actions/runs/44042998811"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["observedAt", "organization", "activeRepositories", "judgment"],
+  "properties": {
+    "observedAt": {"type": "string", "format": "date"},
+    "organization": {"type": "string"},
+    "activeRepositories": {"type": "integer", "minimum": 0},
+    "issuesEnabledRepositories": {"type": "integer", "minimum": 0},
+    "workflowRepositories": {"type": "integer", "minimum": 0},
+    "pullRequestTemplateRepositories": {"type": "integer", "minimum": 0},
+    "issueTemplateRepositories": {"type": "integer", "minimum": 0},
+    "judgment": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
