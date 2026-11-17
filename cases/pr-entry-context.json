@@ -1,0 +1,14 @@
+{
+  "id": "pr-entry-context",
+  "facts": [
+    "Historical GitOps pull requests were difficult to understand when grouped under archive Issues.",
+    "Repository evolution became readable after pull requests were assigned to specific Issues, parent Issues and Projects.",
+    "Cross-organization references are necessary because related repositories have different owners."
+  ],
+  "judgment": "A pull request needs a real closing Issue before its implementation can be interpreted as project work.",
+  "rule": "Require at least one resolvable closing Issue reference and report its native Project membership at pull request entry.",
+  "evidence": [
+    "https://github.com/re8ch/service-backend/issues/2890",
+    "https://github.com/re8ch/service-backend/issues/2891"
+  ]
+}
