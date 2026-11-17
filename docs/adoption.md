@@ -18,9 +18,9 @@ permissions:
 jobs:
   entry:
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
-    uses: re8ch/Emprico/.github/workflows/pr-entry.yml@v1
+    uses: re8ch/Emprico/.github/workflows/pr-entry.yml@309da81d020078d728845a540a8c24718cb8c78d
   state:
-    uses: re8ch/Emprico/.github/workflows/state.yml@v1
+    uses: re8ch/Emprico/.github/workflows/state.yml@309da81d020078d728845a540a8c24718cb8c78d
 ```
 
 `pr-entry` accepts same-repository and `owner/repository#number` closing references. It verifies that each referenced Issue exists and reports whether native Project membership is visible to the caller token.

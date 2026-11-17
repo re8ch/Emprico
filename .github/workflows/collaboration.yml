@@ -1,0 +1,19 @@
+name: Collaboration
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, ready_for_review, closed]
+  issues:
+    types: [closed, reopened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  entry:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    uses: re8ch/Emprico/.github/workflows/pr-entry.yml@309da81d020078d728845a540a8c24718cb8c78d
+  state:
+    uses: re8ch/Emprico/.github/workflows/state.yml@309da81d020078d728845a540a8c24718cb8c78d
